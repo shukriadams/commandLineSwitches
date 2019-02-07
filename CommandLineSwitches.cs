@@ -1,4 +1,11 @@
-﻿using System;
+///////////////////////////////////////////////////////////////
+// CommandLineArgumentParser - Parses command line arguments //
+// Shukri Adams (shukri.adams@gmail.com)                     //
+// https://github.com/shukriadams/commandLineSwitches        //
+// MIT License (MIT) Copyright (c) 2018 Shukri Adams         //
+///////////////////////////////////////////////////////////////
+
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
