@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////
-// CommandLineArgumentParser - Parses command line arguments //
-// Shukri Adams (shukri.adams@gmail.com)                     //
-// https://github.com/shukriadams/commandLineSwitches        //
-// MIT License (MIT) Copyright (c) 2018 Shukri Adams         //
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+// CommandLineSwitches - Parses command line args to switches //
+// Shukri Adams (shukri.adams@gmail.com)                      //
+// https://github.com/shukriadams/commandLineSwitches         //
+// MIT License (MIT) Copyright (c) 2018 Shukri Adams          //
+////////////////////////////////////////////////////////////////
 
 using System;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace YourNameSpaceHere
     /// Parses command line arguments into key-value pairs. For example, if an app is started "app.exe -i foo -j bar"
     /// this.Arguments will contain two items, {i,foo} and {j, bar}.
     /// </summary>
-    public class CommandLineArgumentParser
+    public class CommandLineSwitches 
     {
         /// <summary>
         /// Parsed key-values for arguments.
@@ -34,7 +34,7 @@ namespace YourNameSpaceHere
         /// <param name="args">Raw command line args, such as those passed into your command line app.</param>
         /// <param name="switchLead">Lead for switches. All argument switches must be the same. For "-i foo -j bar", "-" is the lead.</param>
         /// <param name="convertKeysToLower">Set to true if you want your command line switches be stored in lower case. Example, -I fOo will yield {i, fOo}. Value is not affected. Default false.</param>
-        public CommandLineArgumentParser(string[] args, string switchLead, bool convertKeysToLower)
+        public CommandLineSwitches(string[] args, string switchLead, bool convertKeysToLower)
         {
             this.Arguments = new List<KeyValuePair<string, string>>();
             _convertKeysToLower = convertKeysToLower;
