@@ -34,13 +34,13 @@ namespace YourNameSpaceHere
         /// <param name="args">Raw command line args, such as those passed into your command line app.</param>
         /// <param name="switchLead">Lead for switches. All argument switches must be the same. For "-i foo -j bar", "-" is the lead.</param>
         /// <param name="convertKeysToLower">Set to true if you want your command line switches be stored in lower case. Example, -I fOo will yield {i, fOo}. Value is not affected. Default false.</param>
-        public CommandLineSwitches(string[] args, string switchLead, bool convertKeysToLower)
+        public CommandLineSwitches(string[] args, string switchLead = "--", bool convertKeysToLower = true)
         {
-            this.Arguments = new List<KeyValuePair<string, string>>();
-            _convertKeysToLower = convertKeysToLower;
-
             if (string.IsNullOrEmpty(switchLead))
                 throw new ArgumentException("Lead is required.");
+
+            this.Arguments = new List<KeyValuePair<string, string>>();
+            _convertKeysToLower = convertKeysToLower;
 
             if (args == null || !args.Any())
                 return;
@@ -62,7 +62,7 @@ namespace YourNameSpaceHere
         }
 
         /// <summary>
-        /// Returns true if the collection has an item of the giveb name
+        /// Returns true if the collection has an item of the given name
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -75,7 +75,7 @@ namespace YourNameSpaceHere
         }
 
         /// <summary>
-        /// 
+        /// Returns the value for a given key ; returns emptry string if key is not set.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -85,7 +85,7 @@ namespace YourNameSpaceHere
                 key = key.ToLower();
 
             if (!this.Contains(key))
-                throw new ArgumentException(string.Format("Argument collection does not contain {0}", key));
+                return string.Empty;
 
             return _convertKeysToLower ?
                 this.Arguments.Single(r => r.Key.ToLower() == key).Value :
