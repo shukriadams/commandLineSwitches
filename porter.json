@@ -1,0 +1,7 @@
+{
+    "name" : "Madscience_CommandLineSwitches",
+    "runtimes" : [ 6 ],
+    "author" : "Shukri Adams <contact@shukriadams.com",
+    "license": "MIT",
+    "description": "Easier switches from command line args."
+}
