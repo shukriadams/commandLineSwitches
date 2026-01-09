@@ -9,8 +9,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-// You probably want to change this.
-namespace YourNameSpaceHere
+namespace MadScience
 {
     /// <summary>
     /// Parses command line arguments into key-value pairs. For example, if an app is started "app.exe -i foo -j bar"
