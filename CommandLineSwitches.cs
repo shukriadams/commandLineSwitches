@@ -5,9 +5,9 @@
 // MIT License (MIT) Copyright (c) 2018 Shukri Adams          //
 ////////////////////////////////////////////////////////////////
 
-using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Madscience_CommandLineSwitches
 {
@@ -23,6 +23,11 @@ namespace Madscience_CommandLineSwitches
         public List<KeyValuePair<string, string>> Arguments { get; set; }
 
         /// <summary>
+        /// Invalid switches
+        /// </summary>
+        public IList<string> InvalidArguments { get; set; } = new List<string>();
+
+        /// <summary>
         /// If true, all switches will be forced to lower case.
         /// </summary>
         private readonly bool _convertKeysToLower;
@@ -31,30 +36,44 @@ namespace Madscience_CommandLineSwitches
         /// 
         /// </summary>
         /// <param name="args">Raw command line args, such as those passed into your command line app.</param>
-        /// <param name="switchLead">Lead for switches. All argument switches must be the same. For "-i foo -j bar", "-" is the lead.</param>
         /// <param name="convertKeysToLower">Set to true if you want your command line switches be stored in lower case. Example, -I fOo will yield {i, fOo}. Value is not affected. Default false.</param>
-        public CommandLineSwitches(string[] args, string switchLead = "--", bool convertKeysToLower = true)
+        public CommandLineSwitches(string[] args, bool convertKeysToLower = true)
         {
-            if (string.IsNullOrEmpty(switchLead))
-                throw new ArgumentException("Lead is required.");
-
             this.Arguments = new List<KeyValuePair<string, string>>();
             _convertKeysToLower = convertKeysToLower;
 
             if (args == null || !args.Any())
                 return;
 
+            Regex switchLeadRegex = new Regex("(-+)(.*)");
             for (int i = 0; i < args.Length; i++)
             {
                 string arg = args[i];
-                if (!arg.ToLower().StartsWith(switchLead))
+                Match match = switchLeadRegex.Match(arg);
+                if (!match.Success || match.Groups.Count < 2)
                     continue;
 
-                string key = arg.Substring(switchLead.Length);
+                string lead = match.Groups[1].ToString();
+                string key = match.Groups[2].ToString();
+
+                if (lead.Length > 2)
+                {
+                    this.InvalidArguments.Add(lead+key);
+                    continue;
+                }
+
+                if (lead.Length == 1 && key.Length > 1)
+                {
+                    this.InvalidArguments.Add(lead+key);
+                    continue;
+                }
+
                 string value = null;
 
-                if (args.Length > i + 1 && !args[i + 1].ToLower().StartsWith(switchLead))
+                // if this arg is a valid switch, and the next item in list is not a swtich, value is the next item in list
+                if (args.Length > i + 1 && !args[i + 1].ToLower().StartsWith("-"))
                     value = args[i + 1];
+
 
                 this.Arguments.Add(new KeyValuePair<string, string>(convertKeysToLower ? key.ToLower() : key, value));
             }
