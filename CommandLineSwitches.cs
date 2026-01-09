@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace MadScience
+namespace Madscience_CommandLineSwitches
 {
     /// <summary>
     /// Parses command line arguments into key-value pairs. For example, if an app is started "app.exe -i foo -j bar"
