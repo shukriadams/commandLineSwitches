@@ -28,19 +28,12 @@ namespace Madscience_CommandLineSwitches
         public IList<string> InvalidArguments { get; set; } = new List<string>();
 
         /// <summary>
-        /// If true, all switches will be forced to lower case.
-        /// </summary>
-        private readonly bool _convertKeysToLower;
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="args">Raw command line args, such as those passed into your command line app.</param>
-        /// <param name="convertKeysToLower">Set to true if you want your command line switches be stored in lower case. Example, -I fOo will yield {i, fOo}. Value is not affected. Default false.</param>
-        public CommandLineSwitches(string[] args, bool convertKeysToLower = true)
+        public CommandLineSwitches(string[] args)
         {
             this.Arguments = new List<KeyValuePair<string, string>>();
-            _convertKeysToLower = convertKeysToLower;
 
             if (args == null || !args.Any())
                 return;
@@ -75,7 +68,7 @@ namespace Madscience_CommandLineSwitches
                     value = args[i + 1];
 
 
-                this.Arguments.Add(new KeyValuePair<string, string>(convertKeysToLower ? key.ToLower() : key, value));
+                this.Arguments.Add(new KeyValuePair<string, string>(key, value));
             }
         }
 
@@ -86,10 +79,7 @@ namespace Madscience_CommandLineSwitches
         /// <returns></returns>
         public bool Contains(string key)
         {
-            if (_convertKeysToLower)
-                key = key.ToLower();
-
-            return _convertKeysToLower ? this.Arguments.Any(r => r.Key.ToLower() == key) : this.Arguments.Any(r => r.Key == key);
+            return this.Arguments.Any(r => r.Key == key);
         }
 
         /// <summary>
@@ -97,17 +87,15 @@ namespace Madscience_CommandLineSwitches
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public string Get(string key)
+        public string Get(string longName, string shortName)
         {
-            if (_convertKeysToLower)
-                key = key.ToLower();
+            if (this.Contains(shortName))
+                return this.Arguments.Single(r => r.Key == shortName).Value;
 
-            if (!this.Contains(key))
-                return string.Empty;
+            if (this.Contains(longName))
+                return this.Arguments.Single(r => r.Key == longName).Value;
 
-            return _convertKeysToLower ?
-                this.Arguments.Single(r => r.Key.ToLower() == key).Value :
-                this.Arguments.Single(r => r.Key == key).Value;
+            return string.Empty;
         }
     }
 }
