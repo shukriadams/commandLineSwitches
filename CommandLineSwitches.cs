@@ -1,4 +1,3 @@
-
 ////////////////////////////////////////////////////////////////
 // CommandLineSwitches - Parses command line args to switches //
 // Shukri Adams (mail@shukriadams.com)                      //
@@ -124,8 +123,20 @@ namespace Madscience_CommandLineSwitches
 
             Regex switchLeadRegex = new Regex("(-+)(.*)");
             StringBuilder description = new StringBuilder();
+            
+            // set default values, these are always applied even if switch is not set
+            foreach(KeyValuePair<string, Argument> arg in this.Arguments)
+            {
+                Argument argument = arg.Value;
+                if (argument.DefaultValue != null && argument.IsRequired)
+                    throw new Exception($"\"{argument.Id}\" cannot be both required and have a default value.");
 
-            for (int i = 0; i < args.Length; i++)
+                if (argument.DefaultValue != null)
+                    argument.SetValue(argument.DefaultValue);
+            }
+
+            // now try to set values from args passed in
+            for (int i = 0; i < args.Length; i ++)
             {
                 string arg = args[i];
                 Match match = switchLeadRegex.Match(arg);
@@ -162,7 +173,6 @@ namespace Madscience_CommandLineSwitches
 
                 bool argumentRegistered = false;
 
-
                 foreach(KeyValuePair<string, Argument> bound in this.Arguments)
                 {
                     Argument argument = bound.Value;
@@ -179,19 +189,6 @@ namespace Madscience_CommandLineSwitches
             }
 
             response.Succeeded = true;
-
-
-            // set default values, these are always applied even is switch is not set
-            foreach(KeyValuePair<string, Argument> arg in this.Arguments)
-            {
-                Argument argument = arg.Value;
-                if (argument.DefaultValue != null && argument.IsRequired)
-                    throw new Exception($"\"{argument.Id}\" cannot be both required and have a default value.");
-
-                if (argument.DefaultValue != null)
-                    argument.SetValue(argument.DefaultValue);
-            }
-
 
             if (validate)
             {
