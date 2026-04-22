@@ -121,7 +121,7 @@ namespace Madscience_CommandLineSwitches
         {
             BindResponse response = new BindResponse();
 
-            Regex switchLeadRegex = new Regex("(-+)(.*)");
+            Regex switchLeadRegex = new Regex("^(-+)(.*)");
             StringBuilder description = new StringBuilder();
             
             // set default values, these are always applied even if switch is not set
