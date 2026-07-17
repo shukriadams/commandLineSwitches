@@ -23,6 +23,9 @@ namespace Madscience_CommandLineSwitches
         
         public bool IsRequired { get; set;}
         
+        // Only one exclusive argument can be set.
+        public bool IsExclusive { get; set;}
+
         public bool IsSet { get; set;}
 
         // note, must be in same format as command line would be, will be parsed layer
@@ -117,7 +120,7 @@ namespace Madscience_CommandLineSwitches
         /// 
         /// </summary>
         /// <param name="args">Raw command line args, such as those passed into your command line app.</param>
-        public BindResponse Bind(string[] args, bool validate)
+        public BindResponse Bind(string[] args, bool validate = true)
         {
             BindResponse response = new BindResponse();
 
@@ -202,6 +205,15 @@ namespace Madscience_CommandLineSwitches
                         response.Succeeded = false;
                         description.AppendLine($"{GenerateUseText(argument)}");
                     }
+                }
+
+                // enforce exclusive
+                IEnumerable<Argument> exclusiveArgs = this.Arguments.Where(a => a.Value.IsSet && a.Value.IsExclusive).Select(a => a.Value);
+                if (exclusiveArgs.Count() > 1)
+                {
+                    response.Succeeded = false;
+                    description.AppendLine($"Cannot set {string.Join(",", exclusiveArgs.Select(a => a.Id))} simultaneously. Use only one.");
+                    
                 }
 
                 // fail on unregistered
